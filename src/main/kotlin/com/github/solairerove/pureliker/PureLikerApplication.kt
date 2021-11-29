@@ -12,6 +12,7 @@ import javax.crypto.spec.SecretKeySpec
 надо понять как синхронизировать время и как генерить хмак токен, чтобы ходить с токеном на апи
 Далее дело воощбе за малым. Это основная проблема.
 
+webpack:///Api.js
 calculateAuthorizationHash(type, url, requestBody, userId) {
     // Хак, т.к. для истории чатов нужен hmac от get /me
     // Нужно будет добавить проброс авторизации извне
@@ -51,7 +52,8 @@ class PureLikerApplication : CommandLineRunner {
 
     override fun run(vararg args: String?) {
         println("hui")
-        println(createSignature("some data", "key"))
+        val sToEncode = "GET/me1638226516.123"
+        println(createSignature(sToEncode, "b4255022d6f65a35622b700c96a84dd8"))
     }
 }
 
@@ -59,6 +61,12 @@ fun main(args: Array<String>) {
     runApplication<PureLikerApplication>(*args)
 }
 
+// https://www.freeformatter.com/hmac-generator.html#ad-output
+// example of necessary hmac
+// hmac 6019a921ae5703021800365c:1638226516.123:1d5a9b7c6f4b23293aaa51ed2262e87815b2e7f406d4e195c32b610fc8c396e1
+// userId - 6019a921ae5703021800365c
+// serverTime - 1638226516.123
+// hash 1d5a9b7c6f4b23293aaa51ed2262e87815b2e7f406d4e195c32b610fc8c396e1
 fun createSignature( data: String, key: String): String {
     val sha256Hmac = Mac.getInstance("HmacSHA256")
     val secretKey = SecretKeySpec(key.toByteArray(), "HmacSHA256")
