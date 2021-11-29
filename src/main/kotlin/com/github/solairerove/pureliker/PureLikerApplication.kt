@@ -52,7 +52,7 @@ class PureLikerApplication : CommandLineRunner {
 
     override fun run(vararg args: String?) {
         println("hui")
-        val sToEncode = "GET/me1638226516.123"
+        val sToEncode = "GET+/me++1638226516.123"
         println(createSignature(sToEncode, "b4255022d6f65a35622b700c96a84dd8"))
     }
 }
