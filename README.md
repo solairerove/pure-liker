@@ -3,6 +3,7 @@ Trying to automate likes on pure dating app
 
 ### How to start
 ```shell
+mvn spring-boot:run
 mvn clean install && java -jar target/pure-liker-0.0.1-SNAPSHOT.jar
 ```
 

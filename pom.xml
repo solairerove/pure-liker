@@ -31,16 +31,23 @@
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.15</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
