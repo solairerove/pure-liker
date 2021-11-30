@@ -76,10 +76,11 @@ class PureLikerApplication : CommandLineRunner {
         val serverTime = "${currTime.take(currTime.length - 3)}.${currTime.takeLast(3)}"
         println(serverTime)
 
-        println(createSignature("GET+/me++1638229151.213", "6d30252367eaa0630c4ba38481a33a84"))
-
-        val sToEncode = "GET+/me++$serverTime"
-        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(sToEncode, "6d30252367eaa0630c4ba38481a33a84")}")
+        // GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=1&sexuality=h&start_at=1638286752.74++1638286752.804
+        val meToEncode = "GET+/me++$serverTime"
+        val feedToEncode = "GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=1&sexuality=h&start_at=$serverTime++$serverTime"
+        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(meToEncode, "674a41a9f93c815e2594da5fadaabbc7")}")
+        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(feedToEncode, "674a41a9f93c815e2594da5fadaabbc7")}")
     }
 }
 
