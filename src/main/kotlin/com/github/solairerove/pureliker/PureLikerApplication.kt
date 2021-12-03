@@ -9,6 +9,7 @@ import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
+
 /*
 Это код с блядского риакта браузерной верссии блядского аппа.
 надо понять как синхронизировать время и как генерить хмак токен, чтобы ходить с токеном на апи
@@ -72,19 +73,29 @@ class PureLikerApplication : CommandLineRunner {
     override fun run(vararg args: String?) {
         println("hui")
 
-        val currTime = (Date.from(Instant.now()).time).toString()
-        val serverTime = "${currTime.take(currTime.length - 3)}.${currTime.takeLast(3)}"
+        val currTime = (Date.from(Instant.now()))
+        val c = Calendar.getInstance()
+        c.time = currTime
+        c.add(Calendar.YEAR, 1)
+        val exp = c.time
+
+        val serverTime = "${currTime.time.toString().take(currTime.time.toString().length - 3)}.${currTime.time.toString().takeLast(3)}"
+        val expTime = "${exp.time.toString().take(exp.time.toString().length - 3)}.${exp.time.toString().takeLast(3)}"
         println(serverTime)
+        println(expTime)
+
 
         // GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=1&sexuality=h&start_at=1638286752.74++1638286752.804
         val meToEncode = "GET+/me++$serverTime"
         val feedToEncode = "GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=1&sexuality=h&start_at=$serverTime++$serverTime"
         val feed2ToEncode = "GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=2&sexuality=h&start_at=$serverTime++$serverTime"
         val like = "POST+/users/5fb7647831027f377be90d9c/reactions/sent/likes+{\"value\":\"liked\",\"createdTime\":1638531460.726,\"expiresTime\":1670067460.726}+1638531460.756"
+        val like2 = "POST+/users/61a7dc4097843e17c0895f8d/reactions/sent/likes+{\"value\":\"liked\",\"createdTime\":$serverTime,\"expiresTime\":$expTime}+$serverTime"
         println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(meToEncode, "c5298114379096c4da2db73fb4f311db")}")
         println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(feedToEncode, "c5298114379096c4da2db73fb4f311db")}")
         println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(feed2ToEncode, "c5298114379096c4da2db73fb4f311db")}")
         println("hmac 6019a921ae5703021800365c:1638531460.756:${createSignature(like, "c5298114379096c4da2db73fb4f311db")}")
+        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(like2, "c5298114379096c4da2db73fb4f311db")}")
     }
 }
 
