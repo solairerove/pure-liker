@@ -4,6 +4,9 @@ import org.apache.commons.codec.binary.Hex
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.StandardOpenOption
 import java.time.Instant
 import java.util.*
 import javax.crypto.Mac
@@ -96,6 +99,10 @@ class PureLikerApplication : CommandLineRunner {
         println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(feed2ToEncode, "c5298114379096c4da2db73fb4f311db")}")
         println("hmac 6019a921ae5703021800365c:1638531460.756:${createSignature(like, "c5298114379096c4da2db73fb4f311db")}")
         println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(like2, "c5298114379096c4da2db73fb4f311db")}")
+
+        val myfile = File("tni.txt")
+        Files.write(myfile.toPath(), ("ele" + "\n").toByteArray(), StandardOpenOption.APPEND)
+        Files.write(myfile.toPath(), ("ele2" + "\n").toByteArray(), StandardOpenOption.APPEND)
     }
 }
 
