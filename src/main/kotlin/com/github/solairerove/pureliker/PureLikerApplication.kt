@@ -80,9 +80,11 @@ class PureLikerApplication : CommandLineRunner {
         val meToEncode = "GET+/me++$serverTime"
         val feedToEncode = "GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=1&sexuality=h&start_at=$serverTime++$serverTime"
         val feed2ToEncode = "GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=2&sexuality=h&start_at=$serverTime++$serverTime"
-        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(meToEncode, "674a41a9f93c815e2594da5fadaabbc7")}")
-        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(feedToEncode, "674a41a9f93c815e2594da5fadaabbc7")}")
-        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(feed2ToEncode, "674a41a9f93c815e2594da5fadaabbc7")}")
+        val like = "POST+/users/5fb7647831027f377be90d9c/reactions/sent/likes+{\"value\":\"liked\",\"createdTime\":1638531460.726,\"expiresTime\":1670067460.726}+1638531460.756"
+        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(meToEncode, "c5298114379096c4da2db73fb4f311db")}")
+        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(feedToEncode, "c5298114379096c4da2db73fb4f311db")}")
+        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(feed2ToEncode, "c5298114379096c4da2db73fb4f311db")}")
+        println("hmac 6019a921ae5703021800365c:1638531460.756:${createSignature(like, "c5298114379096c4da2db73fb4f311db")}")
     }
 }
 
