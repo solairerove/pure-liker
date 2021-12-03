@@ -4,6 +4,10 @@ import org.apache.commons.codec.binary.Hex
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.web.client.RestTemplate
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
@@ -82,7 +86,9 @@ class PureLikerApplication : CommandLineRunner {
         c.add(Calendar.YEAR, 1)
         val exp = c.time
 
-        val serverTime = "${currTime.time.toString().take(currTime.time.toString().length - 3)}.${currTime.time.toString().takeLast(3)}"
+        val serverTime = "${currTime.time.toString().take(currTime.time.toString().length - 3)}.${
+            currTime.time.toString().takeLast(3)
+        }"
         val expTime = "${exp.time.toString().take(exp.time.toString().length - 3)}.${exp.time.toString().takeLast(3)}"
         println(serverTime)
         println(expTime)
@@ -90,20 +96,120 @@ class PureLikerApplication : CommandLineRunner {
 
         // GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=1&sexuality=h&start_at=1638286752.74++1638286752.804
         val meToEncode = "GET+/me++$serverTime"
-        val feedToEncode = "GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=1&sexuality=h&start_at=$serverTime++$serverTime"
-        val feed2ToEncode = "GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=2&sexuality=h&start_at=$serverTime++$serverTime"
-        val like = "POST+/users/5fb7647831027f377be90d9c/reactions/sent/likes+{\"value\":\"liked\",\"createdTime\":1638531460.726,\"expiresTime\":1670067460.726}+1638531460.756"
-        val like2 = "POST+/users/61a7dc4097843e17c0895f8d/reactions/sent/likes+{\"value\":\"liked\",\"createdTime\":$serverTime,\"expiresTime\":$expTime}+$serverTime"
-        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(meToEncode, "c5298114379096c4da2db73fb4f311db")}")
-        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(feedToEncode, "c5298114379096c4da2db73fb4f311db")}")
-        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(feed2ToEncode, "c5298114379096c4da2db73fb4f311db")}")
-        println("hmac 6019a921ae5703021800365c:1638531460.756:${createSignature(like, "c5298114379096c4da2db73fb4f311db")}")
-        println("hmac 6019a921ae5703021800365c:$serverTime:${createSignature(like2, "c5298114379096c4da2db73fb4f311db")}")
+        val feedToEncode =
+            "GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=1&sexuality=h&start_at=$serverTime++$serverTime"
+        val feed2ToEncode =
+            "GET+/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=2&sexuality=h&start_at=$serverTime++$serverTime"
+        val like =
+            "POST+/users/5fb7647831027f377be90d9c/reactions/sent/likes+{\"value\":\"liked\",\"createdTime\":1638531460.726,\"expiresTime\":1670067460.726}+1638531460.756"
+        val like2 =
+            "POST+/users/61a7dc4097843e17c0895f8d/reactions/sent/likes+{\"value\":\"liked\",\"createdTime\":$serverTime,\"expiresTime\":$expTime}+$serverTime"
+        println(
+            "hmac 6019a921ae5703021800365c:$serverTime:${
+                createSignature(
+                    meToEncode,
+                    "c5298114379096c4da2db73fb4f311db"
+                )
+            }"
+        )
+        println(
+            "hmac 6019a921ae5703021800365c:$serverTime:${
+                createSignature(
+                    feedToEncode,
+                    "c5298114379096c4da2db73fb4f311db"
+                )
+            }"
+        )
+        println(
+            "hmac 6019a921ae5703021800365c:$serverTime:${
+                createSignature(
+                    feed2ToEncode,
+                    "c5298114379096c4da2db73fb4f311db"
+                )
+            }"
+        )
+        println(
+            "hmac 6019a921ae5703021800365c:1638531460.756:${
+                createSignature(
+                    like,
+                    "c5298114379096c4da2db73fb4f311db"
+                )
+            }"
+        )
+        println(
+            "hmac 6019a921ae5703021800365c:$serverTime:${
+                createSignature(
+                    like2,
+                    "c5298114379096c4da2db73fb4f311db"
+                )
+            }"
+        )
 
         val myfile = File("tni.txt")
         Files.write(myfile.toPath(), ("ele" + "\n").toByteArray(), StandardOpenOption.APPEND)
         Files.write(myfile.toPath(), ("ele2" + "\n").toByteArray(), StandardOpenOption.APPEND)
+
+//        val restTemplate = RestTemplate()
+//        val feedUrl = "/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online%2C-created_at&page=1&sexuality=h&start_at=$serverTime"
+//        val apiHost = "https://pure-api.soulplatform.com"
+//
+//        val payloadToHash = "GET+$feedUrl++$serverTime"
+//
+//        val headers = HttpHeaders()
+//        headers.add("x-js-user-agent", "PureFTP/1.8.6 (JS 1.0; OS X 10.15.7 64-bit MacIntel Chrome 95.0.4638.69; en-US) SoulSDK/0.14.6 (JS)")
+//        headers.add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36")
+//        headers.add("sec-ch-ua", "\"Google Chrome\";v=\"95\", \"Chromium\";v=\"95\", \";Not A Brand\";v=\"99\"")
+//        headers.add("accept", "*/*")
+//        headers.add("accept-encoding", "gzip, deflate, br")
+//        val hmacToken = "hmac 6019a921ae5703021800365c:$serverTime:${createSignature(payloadToHash, "c5298114379096c4da2db73fb4f311db")}"
+//        headers.add("authorization", hmacToken)
+//
+//        val req = HttpEntity<Any>(headers)
+//        val response = restTemplate.exchange("$apiHost/search/feed/?city_id=524901&have_photo=true&is_around_city=true&is_online=true&lang=ru&looking_for=f&ordering=-is_online,-created_at&page=1&sexuality=h&start_at=$serverTime", HttpMethod.GET, req, String::class.java)
+
+        getMe()
     }
+}
+
+fun getMe() {
+    val restTemplate = RestTemplate()
+    val meUrl = "/me"
+    val apiHost = "https://pure-api.soulplatform.com"
+    val serverTime = stringifyServerTime(currTime = getServerTime())
+
+    val payloadToHash = "GET+$meUrl++$serverTime"
+
+    val headers = HttpHeaders()
+    headers.add(
+        "x-js-user-agent",
+        "PureFTP/1.8.6 (JS 1.0; OS X 10.15.7 64-bit MacIntel Chrome 95.0.4638.69; en-US) SoulSDK/0.14.6 (JS)"
+    )
+    headers.add(
+        "user-agent",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+    )
+    headers.add("sec-ch-ua", "\"Google Chrome\";v=\"95\", \"Chromium\";v=\"95\", \";Not A Brand\";v=\"99\"")
+    headers.add("accept", "*/*")
+    headers.add("accept-encoding", "gzip, deflate, br")
+
+    val hmacToken = "hmac 6019a921ae5703021800365c:$serverTime:${
+        createSignature(
+            payloadToHash,
+            "c5298114379096c4da2db73fb4f311db"
+        )
+    }"
+
+    headers.add("authorization", hmacToken)
+
+    val req = HttpEntity<Any>(headers)
+    val response = restTemplate.exchange(
+        "$apiHost$meUrl",
+        HttpMethod.GET,
+        req,
+        String::class.java
+    )
+
+    response.statusCodeValue
 }
 
 fun main(args: Array<String>) {
@@ -124,6 +230,22 @@ fun createSignature(data: String, key: String): String {
     return Hex.encodeHexString(sha256Hmac.doFinal(data.toByteArray()))
 }
 
-fun getServerTime() {
+fun getServerTime(): Date {
+    return (Date.from(Instant.now()))
+}
 
+fun getExpTime(currTime: Date): Date {
+    val c = Calendar.getInstance()
+    c.time = currTime
+    c.add(Calendar.YEAR, 1)
+
+    return c.time
+}
+
+fun stringifyServerTime(currTime: Date): String {
+    val time =
+        "${currTime.time.toString().take(currTime.time.toString().length - 3)}.${currTime.time.toString().takeLast(3)}"
+    println(time)
+
+    return time
 }
